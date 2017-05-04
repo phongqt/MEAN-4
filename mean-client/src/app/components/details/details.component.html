@@ -1,1 +1,9 @@
-<h2>This is a Details page</h2> 
+<div *ngIf="employee">
+    <h2>{{employee.EmployeeName}} details!</h2>
+    <div><label>Designation: </label>{{employee.Designation}}</div>
+    <div><label>Skills: </label>{{employee.Skills}}</div>
+    <div>
+    <label>name: </label>
+        <input [(ngModel)]="employee.EmployeeName" placeholder="name" />
+    </div>
+</div>

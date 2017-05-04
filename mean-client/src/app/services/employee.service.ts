@@ -1,14 +1,18 @@
-import { Injectable } from '@angular/core';  
-import { Http, Headers, RequestOptions, Response } from '@angular/http';  
-import { Observable } from "RxJS/Rx";  
-  
-@Injectable()  
-export class EmployeeService {  
-    constructor(private http: Http) {  
-         
-    }  
-    getEmployeeList() {  
-        return this.http.get('http://localhost:4500/api');  
-    }  
-      
+import { Injectable } from '@angular/core';
+import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { Observable } from "RxJS/Rx";
+
+@Injectable()
+export class EmployeeService {
+    constructor(private http: Http) {
+
+    }
+
+    getEmployeeList() {
+        return this.http.get('http://localhost:4500/api');
+    }
+
+    getEmployeeById(id) {
+        return this.http.get('http://localhost:4500/api/employ/' + id);
+    }
 }   

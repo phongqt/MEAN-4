@@ -9,7 +9,7 @@ var port=4500;
 var app=express();  
   
 app.set('view engine','ejs');  
-app.set('views',path.join(__dirname,'/client/views'));  
+app.set('views',path.join(__dirname,'/mean-client'));  
   
 // define the view engine and set the path for views files  
   
@@ -33,7 +33,7 @@ app.engine('html',require('ejs').renderFile);
     // Pass to next layer of middleware
     next();
 });
-app.use(express.static(path.join(__dirname,'/client')));  
+app.use(express.static(path.join(__dirname,'/mean-client')));  
   
 // Defien the path for the static files like image, css and js files  
   

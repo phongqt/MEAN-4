@@ -35,7 +35,7 @@
                         {{i+1}}  
                     </td>  
                     <td>  
-                        {{empData.EmployeeName}}  
+                        <a href="javascript:void(0)" (click)="onSelectEmployee(empData)">{{empData.EmployeeName}}</a>  
                     </td>  
                     <td>  
                        {{empData.Designation}}  
@@ -43,12 +43,7 @@
                     <td>  
                        {{empData.Project}}  
                     </td>  
-                    <td>  
-  
-                        <a [routerLink]="['/details/',empData._id]"  
-                           class="btn btn-primary">  
-                            Detail  
-                        </a>  
+                    <td>   
                         <a [routerLink]="['/edit/',empData._id]"  
                            class="btn btn-success">  
                             Edit  
@@ -63,3 +58,7 @@
         </table>  
     </div>  
 </div>     
+
+<employee-details [employee] = "EmployeeSelected">
+
+</employee-details>

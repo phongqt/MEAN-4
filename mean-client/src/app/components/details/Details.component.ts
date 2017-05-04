@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';  
+import { Component, Input } from '@angular/core';  
   
 @Component({  
     moduleId: module.id,  
-    selector: 'details',  
+    selector: 'employee-details',  
     templateUrl: 'details.component.html',  
       
 })  
 export class detailsComponent {  
+    @Input() employee;
 }  
