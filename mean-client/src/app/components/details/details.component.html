@@ -1,9 +1,16 @@
 <div *ngIf="employee">
-    <h2>{{employee.EmployeeName}} details!</h2>
-    <div><label>Designation: </label>{{employee.Designation}}</div>
-    <div><label>Skills: </label>{{employee.Skills}}</div>
-    <div>
-    <label>name: </label>
-        <input [(ngModel)]="employee.EmployeeName" placeholder="name" />
-    </div>
+    <form (ngSubmit)="onSubmit()" #employeeForm="ngForm">
+        <h2>{{employee.EmployeeName}} details!</h2>
+        <div><label>Designation: </label>{{employee.Designation}}</div>
+        <div><label>Skills: </label>{{employee.Skills}}</div>
+        <div>
+            <label>name: </label>
+            <input [(ngModel)]="employee.EmployeeName" placeholder="name" name="EmployeeName" #name="ngModel">
+            <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+                Name is required
+            </div>
+
+        </div>
+        <button type="submit " *ngIf="isShowSaveButton ">Save</button>
+    </form>
 </div>
