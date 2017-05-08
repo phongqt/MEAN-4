@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { EmployeeService } from "../../services/employee.service";
 import { Employee } from '../../models/employee';
-import { detailsComponent } from '../details/details.component';
 
 @Component({
     moduleId: module.id,

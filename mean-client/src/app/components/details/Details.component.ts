@@ -8,5 +8,4 @@ import { Component, Input } from '@angular/core';
 })  
 export class detailsComponent {  
     @Input() employee;
-    @Input() isShowSaveButton
 }  
