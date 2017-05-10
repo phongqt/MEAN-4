@@ -1,5 +1,5 @@
 <div *ngIf="employee">
-    <form (ngSubmit)="onSubmit()" #employeeForm="ngForm">
+    <form (ngSubmit)="onSubmit(employeeForm)" #employeeForm="ngForm">
         <h2>Details!</h2>
         <div class="form-group">
             <label>Name </label>
