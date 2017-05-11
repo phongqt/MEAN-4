@@ -1,37 +1,30 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { Observable } from "RxJS/Rx";
-import { Employee } from '../models/employee';
 import 'rxjs/add/operator/toPromise';
+import { RequestProvider } from '../providers/request.provider';
 
 @Injectable()
 export class EmployeeService {
-
-    private headers = new Headers({'Content-Type': 'application/json'});
-    private url: string = "http://localhost:4500/api/";
-
-    constructor(private http: Http) {
+    constructor(private requestProvider: RequestProvider) {
 
     }
 
-    getEmployeeList() {
-        return this.http.get(this.url);
+    getEmployeeList(page, limit) {
+        return this.requestProvider.get('/employ?page=' + page + '&limit=' + limit);
     }
 
     getEmployeeById(id) {
-        return this.http.get(this.url + 'employ/' + id).toPromise()
-            .then(response => response.json())
-            .catch(this.handleError);
+        return this.requestProvider.get('/employ/' + id);
     }
 
     updateEmployee(id, data) {
-        return this.http.put(this.url + 'employ/' + id, JSON.stringify(data), {headers: this.headers}).toPromise()
-            .then(response => response.json())
-            .catch(this.handleError);;
+        return this.requestProvider.put('/employ/' + id, data);
     }
 
-    private handleError(error: any): Promise<any> {
-        console.error('An error occurred', error);
-        return Promise.reject(error.message || error);
+    addEmployee(data) {
+        return this.requestProvider.post('/employ/', data);
+    }
+
+    deleteEmployee(id) {
+        return this.requestProvider.delete('/employ/' + id);
     }
 }   

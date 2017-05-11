@@ -24,7 +24,7 @@ export class editComponent implements OnInit {
 
     getEmployeeInfo(): void {
         this.empService.getEmployeeById(this.pars['id'])
-            .then(employee => this.employee = employee);
+            .then(res => this.employee = res.data);
     }
 
     onSubmit(form): void {
@@ -33,9 +33,8 @@ export class editComponent implements OnInit {
             this.empService.updateEmployee(this.pars['id'], model)
                 .then(res => {
                     if (res.success) {
-                        this.employee = res.data;
                         alert('Success.');
-                        this.router.navigate(['/details', this.pars['id']]);
+                        this.router.navigate(['/home']);
                         //this.router.navigate(['/details'], { queryParams: { id: this.pars['id'] } });
                         //this.router.navigate(['edit', { id: this.pars['id'] }]);
                     } else {

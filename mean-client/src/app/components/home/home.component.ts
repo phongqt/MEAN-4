@@ -10,22 +10,52 @@ import { detailsComponent } from '../details/details.component';
 
 })
 export class homeComponent implements OnInit {
-    public EmployeeList = [];
-    public EmployeeSelected = null;
+
+    currentPage = 1;
+    totalPage = 0;
+    limit = 2;
+
+    EmployeeList = [];
+    EmployeeSelected = null;
 
     ngOnInit(): void {
-        this.empService.getEmployeeList()
-            //.subscribe((data: Response)=>this.EmployeeList = data.json());
-            .subscribe(function (data: Response) {
-                this.EmployeeList = data.json()
-            }.bind(this));
+        this.getList();
     }
     public constructor(private empService: EmployeeService) {
+        this.currentPage = 2;
+    }
 
+    private getList() {
+        this.empService.getEmployeeList(this.currentPage, this.limit)
+            .then(res => {
+                if (res.success) {
+                    this.EmployeeList = res.data.data;
+                    this.totalPage = res.data.totalItems;
+                }
+            });
+        // .subscribe(function (data: Response) {
+        //     this.EmployeeList = data.json()
+        // }.bind(this));
     }
 
     public onSelectEmployee(employee) {
         this.EmployeeSelected = employee;
         console.log(employee);
+    }
+
+    public deleteEmployee(item) {
+        var result = confirm("Want to delete?");
+        if (result) {
+            this.empService.deleteEmployee(item._id)
+                .then(res => {
+                    if (res.success) {
+                        this.getList();
+                    }
+                });
+        }
+    }
+
+    public pageChange() {
+       this.getList();
     }
 }   

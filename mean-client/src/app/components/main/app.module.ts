@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';  
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import {NavMenuComponent}  from '../navmenu/navmenu.component';  
@@ -11,6 +12,7 @@ import {homeComponent}  from "../home/home.component";
 import {editComponent} from "../edit/edit.component";  
 import {detailsComponent} from "../details/details.component";  
 import {EmployeeService} from "../../services/employee.service";
+import {RequestProvider} from '../../providers/request.provider';
 
 @NgModule({
   declarations: [
@@ -22,19 +24,20 @@ import {EmployeeService} from "../../services/employee.service";
     detailsComponent
   ],
   imports: [
+    NgbModule.forRoot(),
     BrowserModule,
     FormsModule,
     RouterModule.forRoot([  
             { path: '', redirectTo: 'home', pathMatch: 'full' },  
             { path: 'home', component: homeComponent },  
             { path: 'details/:id', component: detailsComponent },  
-            { path: 'new', component: newEmployeeComponent },  
+            { path: 'add', component: newEmployeeComponent },  
             { path: 'edit/:id', component: editComponent },  
             { path: '**', redirectTo: 'home' }  
         ]),  
     HttpModule
   ],
-  providers: [EmployeeService],
+  providers: [EmployeeService, RequestProvider],
   
   bootstrap: [AppComponent]
 })

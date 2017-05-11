@@ -1,63 +1,63 @@
-<div class="row">  
-    <div class="col-md-12">  
-        <h3>Employee List</h3>  
-        <br />  
-         
-    </div>  
-</div>  
-<div class="row">  
-    <div class="table-responsive">  
-        <table class="table">  
-            <thead>  
-                <tr>  
-                    <th> 
-                        S.No.  
-                    </th>  
-                    <th>  
-                        EmployeeName  
-                    </th>  
-                    <th>  
-                        Designation  
-                    </th>  
-                    <th>  
-                        Project  
-                    </th>  
-                    <th>  
-                        Action  
-                    </th>  
-                </tr>  
-            </thead>  
-            <tbody>  
-                  
-                <tr *ngFor="let empData of EmployeeList  ; let i = index; trackBy: employeeId">  
-                    <td>  
-                        {{i+1}}  
-                    </td>  
-                    <td>  
-                        <a href="javascript:void(0)" (click)="onSelectEmployee(empData)">{{empData.EmployeeName}}</a>  
-                    </td>  
-                    <td>  
-                       {{empData.Designation}}  
-                    </td>  
-                    <td>  
-                       {{empData.Project}}  
-                    </td>  
-                    <td>   
-                        <a [routerLink]="['/edit/',empData._id]"  
-                           class="btn btn-success">  
-                            Edit  
-                        </a>  
-                        <a   
-                           class="btn btn-danger" (click)="deleteEmployee(empData._id)">  
-                            Delete  
-                        </a>  
-                    </td>  
-                </tr>  
-                  
-        </table>  
-    </div>  
-</div>     
+<div class="row">
+    <div class="col-md-12">
+        <h3>Employee List <a class="btn btn-primary" [routerLink]="['/add']">Add new</a></h3>
+        <br />
+    </div>
+</div>
+<div class="row">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        S.No.
+                    </th>
+                    <th class="text-center">
+                        EmployeeName
+                    </th>
+                    <th class="text-center">
+                        Designation
+                    </th>
+                    <th class="text-center">
+                        Project
+                    </th>
+                    <th class="text-center">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
 
-<employee-details [employee] = "EmployeeSelected">
+                <tr *ngFor="let empData of EmployeeList  ; let i = index; trackBy: employeeId">
+                    <td class="text-center">
+                        {{i+1}}
+                    </td>
+                    <td>
+                        <a href="javascript:void(0)" (click)="onSelectEmployee(empData)">{{empData.EmployeeName}}</a>
+                    </td>
+                    <td>
+                        {{empData.Designation}}
+                    </td>
+                    <td>
+                        {{empData.Project}}
+                    </td>
+                    <td class="text-center">
+                        <a [routerLink]="['/edit/',empData._id]" class="btn btn-success">  
+                            Edit  
+                        </a>
+                        <a class="btn btn-danger" (click)="deleteEmployee(empData)">  
+                            Delete  
+                        </a>
+                    </td>
+                </tr>
+
+        </table>
+        <div class="text-center">
+            <ngb-pagination [pageSize]="limit" [(page)]="currentPage" [collectionSize]="totalPage" [maxSize]="5" (pageChange)="pageChange()"></ngb-pagination>
+        </div>
+    </div>
+</div>
+
+<employee-details [employee]="EmployeeSelected">
 
 </employee-details>
