@@ -1,7 +1,7 @@
 import { EmployeeService } from "../../services/employee.service";
 import { Component, OnInit } from '@angular/core';
 import { Response } from '@angular/http';
-import { detailsComponent } from '../details/details.component';
+import { detailsComponent } from '../employee.details/details.component';
 
 @Component({
     moduleId: module.id,
@@ -13,7 +13,7 @@ export class homeComponent implements OnInit {
 
     currentPage = 1;
     totalPage = 0;
-    limit = 2;
+    limit = 10;
 
     EmployeeList = [];
     EmployeeSelected = null;
@@ -22,7 +22,6 @@ export class homeComponent implements OnInit {
         this.getList();
     }
     public constructor(private empService: EmployeeService) {
-        this.currentPage = 2;
     }
 
     private getList() {

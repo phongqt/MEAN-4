@@ -22,6 +22,18 @@
                        <span class='glyphicon glyphicon-user'></span> New Employee  
                    </a>  
                </li>  
+
+               <li [routerLinkActive]="['link-active']">  
+                   <a [routerLink]="['/login']">  
+                       <span class='glyphicon glyphicon-log-in'></span> Login 
+                   </a>  
+               </li>  
+
+               <li [routerLinkActive]="['link-active']">  
+                   <a [routerLink]="['/signup']">  
+                       <span class='glyphicon glyphicon-new-window'></span> Sign Up
+                   </a>  
+               </li>  
            </ul>  
        </div>  
    </div>  
