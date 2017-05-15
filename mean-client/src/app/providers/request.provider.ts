@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { Http, Headers, RequestOptions, Response, RequestOptionsArgs } from '@angular/http';
 import { Observable } from "RxJS/Rx";
 import { CookieProvider } from "../providers/cookie.provider";
 
@@ -8,16 +8,18 @@ export class RequestProvider {
 
     private api: string = "http://localhost:4500/api";
     private headers = new Headers({ 'Content-Type': 'application/json', 'Accept': 'application/json' });
-    
-    constructor(private http: Http, private cookieProvider: CookieProvider) {
+
+    constructor(private http: Http, private cookieProvider: CookieProvider, private options: RequestOptions) {
     }
 
     createAuthorizationHeader() {
         this.headers.append('Authorization', this.cookieProvider.get('token'));
     }
+
     get(url: String) {
         this.createAuthorizationHeader();
-        return this.http.get(this.api + url, { headers: this.headers }).toPromise()
+
+        return this.http.get(this.api + url, { "headers": this.headers }).toPromise()
             .then(response => response.json())
             .catch(this.handleError);
     }
@@ -44,7 +46,7 @@ export class RequestProvider {
     }
 
     private handleError(error: any): Promise<any> {
-        console.error('An error occurred', error);
+        console.log('An error occurred', error);
         return Promise.reject(error.message || error);
     }
 }

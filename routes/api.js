@@ -41,7 +41,7 @@ router.post('/sigup', function (req, resp, next) {
         Role: 1
     });
 
-    user.save(function(err) {
+    user.save(function (err) {
         if (err) return handleError(err);
         let result = successResp(null);
         resp.json(result);
@@ -49,7 +49,7 @@ router.post('/sigup', function (req, resp, next) {
 });
 
 /* Api for employ */
-router.get('/employ', function (req, resp, next) {
+router.get('/employ', checkAuthentication, function (req, resp, next) {
     let page = req.query.page || 1;
     let limit = req.query.limit || constSys.limit;
     let skip = (page - 1) * limit;
@@ -66,6 +66,7 @@ router.get('/employ', function (req, resp, next) {
 });
 
 router.get('/employ/:id', function (req, resp, next) {
+    checkAuthentication(req, resp, next);
     getEmployeeById(req.params.id, function (employee) {
         var res = successResp(employee);
         resp.send(res);
@@ -73,6 +74,7 @@ router.get('/employ/:id', function (req, resp, next) {
 });
 
 router.put('/employ/:id', function (req, resp, next) {
+    checkAuthentication(req, resp, next);
     getEmployeeById(req.params.id, function (employee) {
         var model = req.body;
         employee.EmployeeName = model.EmployeeName;
@@ -94,6 +96,7 @@ router.put('/employ/:id', function (req, resp, next) {
 });
 
 router.post('/employ', function (req, resp, next) {
+    checkAuthentication(req, resp, next);
     var data = req.body;
     Employee.findOne({ EmployeeName: data.EmployeeName }, function (err, obj) {
         if (!obj) {
@@ -117,6 +120,7 @@ router.post('/employ', function (req, resp, next) {
 });
 
 router.delete('/employ/:id', function (req, resp, next) {
+    checkAuthentication(req, resp, next);
     getEmployeeById(req.params.id, function (employee) {
         Employee.remove(employee, function (err, data) {
             if (err) return handleError(err);
@@ -153,6 +157,30 @@ function errorResp(message) {
     result.message = message;
     result.data = null;
     return result;
+}
+
+/* For authentication */
+function checkAuthentication(request, response, next) {
+    let path = request.path;
+    var token = request.headers['authorization'];
+    console.log(request.headers.authorization);
+    if (token) {
+        jwt.verify(token, "superSecret", function (err, decode) {
+            if (err) {
+                response.status(401).send({ success: false, message: 'Failed to authenticate token.' });
+            }
+
+            request.decode = decode;
+            return next();
+        });
+    } else {
+        response.status(403).send({
+            success: false,
+            message: 'No token provided.',
+            data: null
+        })
+    }
+    
 }
 
 module.exports = router;   
