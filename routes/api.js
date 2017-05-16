@@ -65,16 +65,14 @@ router.get('/employ', checkAuthentication, function (req, resp, next) {
     })
 });
 
-router.get('/employ/:id', function (req, resp, next) {
-    checkAuthentication(req, resp, next);
+router.get('/employ/:id',checkAuthentication, function (req, resp, next) {
     getEmployeeById(req.params.id, function (employee) {
         var res = successResp(employee);
         resp.send(res);
     });
 });
 
-router.put('/employ/:id', function (req, resp, next) {
-    checkAuthentication(req, resp, next);
+router.put('/employ/:id', checkAuthentication, function (req, resp, next) {
     getEmployeeById(req.params.id, function (employee) {
         var model = req.body;
         employee.EmployeeName = model.EmployeeName;
@@ -95,8 +93,7 @@ router.put('/employ/:id', function (req, resp, next) {
     });
 });
 
-router.post('/employ', function (req, resp, next) {
-    checkAuthentication(req, resp, next);
+router.post('/employ',checkAuthentication, function (req, resp, next) {
     var data = req.body;
     Employee.findOne({ EmployeeName: data.EmployeeName }, function (err, obj) {
         if (!obj) {
@@ -119,8 +116,7 @@ router.post('/employ', function (req, resp, next) {
 
 });
 
-router.delete('/employ/:id', function (req, resp, next) {
-    checkAuthentication(req, resp, next);
+router.delete('/employ/:id', checkAuthentication, function (req, resp, next) {
     getEmployeeById(req.params.id, function (employee) {
         Employee.remove(employee, function (err, data) {
             if (err) return handleError(err);
@@ -167,14 +163,14 @@ function checkAuthentication(request, response, next) {
     if (token) {
         jwt.verify(token, "superSecret", function (err, decode) {
             if (err) {
-                response.status(401).send({ success: false, message: 'Failed to authenticate token.' });
+                return response.status(401).send({ success: false, message: 'Failed to authenticate token.' });
             }
 
             request.decode = decode;
             return next();
         });
     } else {
-        response.status(403).send({
+        return response.status(403).send({
             success: false,
             message: 'No token provided.',
             data: null

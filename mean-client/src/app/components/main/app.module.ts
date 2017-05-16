@@ -18,6 +18,7 @@ import { EmployeeService } from "../../services/employee.service";
 import { UserService } from "../../services/user.service";
 import { RequestProvider } from '../../providers/request.provider';
 import { CookieProvider } from '../../providers/cookie.provider';
+import { LocalStorageProvider } from '../../providers/localStorage.provider';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,7 @@ import { CookieProvider } from '../../providers/cookie.provider';
     ]),
     HttpModule
   ],
-  providers: [EmployeeService, RequestProvider, UserService, CookieProvider],
+  providers: [EmployeeService, RequestProvider, UserService, CookieProvider, LocalStorageProvider],
 
   bootstrap: [AppComponent]
 })

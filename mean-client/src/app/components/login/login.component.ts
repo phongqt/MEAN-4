@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { User } from '../../models/user';
 import { UserService } from "../../services/user.service";
-import { CookieProvider } from "../../providers/cookie.provider";
+import { LocalStorageProvider } from "../../providers/localStorage.provider";
 
 @Component({
     selector: 'login',
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
         this.user = new User();
     }
 
-    constructor(private userService: UserService, private router: Router, private cookieProvider: CookieProvider) {
+    constructor(private userService: UserService, private router: Router, private localStorageProvider: LocalStorageProvider) {
     }
 
     onSubmit(form): void {
@@ -26,8 +26,9 @@ export class LoginComponent implements OnInit {
             var model = this.user;
             this.userService.login(model).then(res => {
                 if (res.success) {
+                    this.localStorageProvider.remove("token");
+                    this.localStorageProvider.set("token", res.data);
                     alert('Success.');
-                    this.cookieProvider.set("token", res.data, 1);
                     this.router.navigate(['/']);
                 } else {
                     alert(res.message);
