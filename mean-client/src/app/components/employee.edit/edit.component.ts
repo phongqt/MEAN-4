@@ -9,7 +9,7 @@ import { Employee } from '../../models/employee';
     templateUrl: 'edit.component.html',
 
 })
-export class editComponent implements OnInit {
+export class EditEmployeeComponent implements OnInit {
     private employee: Employee;
     private pars: Params;
 

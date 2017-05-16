@@ -6,6 +6,6 @@ import { Component, Input } from '@angular/core';
     templateUrl: 'details.component.html',  
       
 })  
-export class detailsComponent {  
+export class DetailsEmployeeComponent {  
     @Input() employee;
 }  

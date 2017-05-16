@@ -65,7 +65,7 @@ router.get('/employ', checkAuthentication, function (req, resp, next) {
     })
 });
 
-router.get('/employ/:id',checkAuthentication, function (req, resp, next) {
+router.get('/employ/:id', checkAuthentication, function (req, resp, next) {
     getEmployeeById(req.params.id, function (employee) {
         var res = successResp(employee);
         resp.send(res);
@@ -93,7 +93,7 @@ router.put('/employ/:id', checkAuthentication, function (req, resp, next) {
     });
 });
 
-router.post('/employ',checkAuthentication, function (req, resp, next) {
+router.post('/employ', checkAuthentication, function (req, resp, next) {
     var data = req.body;
     Employee.findOne({ EmployeeName: data.EmployeeName }, function (err, obj) {
         if (!obj) {
@@ -159,7 +159,6 @@ function errorResp(message) {
 function checkAuthentication(request, response, next) {
     let path = request.path;
     var token = request.headers['authorization'];
-    console.log(request.headers.authorization);
     if (token) {
         jwt.verify(token, "superSecret", function (err, decode) {
             if (err) {
@@ -176,7 +175,6 @@ function checkAuthentication(request, response, next) {
             data: null
         })
     }
-    
 }
 
 module.exports = router;   

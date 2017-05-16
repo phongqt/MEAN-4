@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
     templateUrl: 'newEmployee.component.html',
 
 })
-export class newEmployeeComponent implements OnInit {
+export class NewEmployeeComponent implements OnInit {
     private employee: Employee;
 
     public constructor(private empService: EmployeeService, private router: Router) {

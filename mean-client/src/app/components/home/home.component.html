@@ -1,63 +1,27 @@
-<div class="row">
-    <div class="col-md-12">
-        <h3>Employee List <a class="btn btn-primary" [routerLink]="['/add']">Add new</a></h3>
-        <br />
+<div class="wrapper">
+    <header-menu></header-menu>
+    <nav-menu></nav-menu>
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Dashboard
+                <small>Version 2.0</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Dashboard</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Info boxes -->
+            <div class="row">
+                <router-outlet></router-outlet>
+            </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
     </div>
 </div>
-<div class="row">
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="text-center">
-                        S.No.
-                    </th>
-                    <th class="text-center">
-                        EmployeeName
-                    </th>
-                    <th class="text-center">
-                        Designation
-                    </th>
-                    <th class="text-center">
-                        Project
-                    </th>
-                    <th class="text-center">
-                        Action
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-
-                <tr *ngFor="let empData of EmployeeList  ; let i = index; trackBy: employeeId">
-                    <td class="text-center">
-                        {{i+1}}
-                    </td>
-                    <td>
-                        <a href="javascript:void(0)" (click)="onSelectEmployee(empData)">{{empData.EmployeeName}}</a>
-                    </td>
-                    <td>
-                        {{empData.Designation}}
-                    </td>
-                    <td>
-                        {{empData.Project}}
-                    </td>
-                    <td class="text-center">
-                        <a [routerLink]="['/edit/',empData._id]" class="btn btn-success">  
-                            Edit  
-                        </a>
-                        <a class="btn btn-danger" (click)="deleteEmployee(empData)">  
-                            Delete  
-                        </a>
-                    </td>
-                </tr>
-
-        </table>
-        <div class="text-center">
-            <ngb-pagination [pageSize]="limit" [(page)]="currentPage" [collectionSize]="totalPage" [maxSize]="5" (pageChange)="pageChange()"></ngb-pagination>
-        </div>
-    </div>
-</div>
-
-<employee-details [employee]="EmployeeSelected">
-
-</employee-details>
