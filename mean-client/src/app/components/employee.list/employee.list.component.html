@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title"><a class="btn btn-primary" [routerLink]="['/add']">Add new</a></h3>
+                <h3 class="box-title"><a class="btn btn-primary" [routerLink]="['/dashboard/add']">Add new</a></h3>
             </div>
 
             <div class="box-body">
@@ -19,9 +19,6 @@
                                 Designation
                             </th>
                             <th class="text-center">
-                                Project
-                            </th>
-                            <th class="text-center">
                                 Action
                             </th>
                         </tr>
@@ -33,33 +30,26 @@
                                 {{i+1}}
                             </td>
                             <td>
-                                <a href="javascript:void(0)" (click)="onSelectEmployee(empData)">{{empData.EmployeeName}}</a>
+                                <a [routerLink]="['/dashboard/edit/',empData._id]" >{{empData.EmployeeName}}</a>
                             </td>
                             <td>
                                 {{empData.Designation}}
                             </td>
-                            <td>
-                                {{empData.Project}}
-                            </td>
                             <td class="text-center">
-                                <a [routerLink]="['/edit/',empData._id]" class="btn btn-success">  
-                            Edit  
-                        </a>
+                                <a [routerLink]="['/dashboard/edit/',empData._id]" class="btn btn-success">  
+                                    Edit  
+                                </a>
                                 <a class="btn btn-danger" (click)="deleteEmployee(empData)">  
-                            Delete  
-                        </a>
+                                    Delete  
+                                </a>
                             </td>
                         </tr>
-
+                    </tbody>
                 </table>
                 <div class="text-center">
                     <ngb-pagination [pageSize]="limit" [(page)]="currentPage" [collectionSize]="totalPage" [maxSize]="5" (pageChange)="pageChange()"></ngb-pagination>
                 </div>
             </div>
         </div>
-
-        <employee-details [employee]="EmployeeSelected">
-
-        </employee-details>
     </div>
 </div>

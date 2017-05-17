@@ -1,4 +1,9 @@
 export class User {
-    UserName: string;
-    Password: string;
+    UserName: String;
+    Password: String;
+    FistName: String;
+    LastName: String;
+    Image: String;
+    Address: String;
+    Email: String;
 };

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
     moduleId: module.id,
     selector: 'newEmployee',
-    templateUrl: 'newEmployee.component.html',
+    templateUrl: 'employee.new.component.html',
 
 })
 export class NewEmployeeComponent implements OnInit {
@@ -27,7 +27,7 @@ export class NewEmployeeComponent implements OnInit {
                 .then(res => {
                     if (res.success) {
                         alert('Success.');
-                        this.router.navigate(['/home']);
+                        this.router.navigate(['/dashboard']);
                     } else {
                         alert(res.message);
                     }

@@ -14,7 +14,7 @@ export class RequestProvider {
     }
 
     createAuthorizationHeader(): Headers {
-        return new Headers({ 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': this.localStorageProvider.get("token") });
+        return new Headers({ 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': this.cookieProvider.get("token") });
     }
 
     get(url: String) {

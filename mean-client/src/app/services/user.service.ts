@@ -12,7 +12,11 @@ export class UserService {
         return this.requestProvider.post('/authenticate', data);
     }
 
-    signup(data) {
-        return this.requestProvider.post('/sigup', data);
+    addUser(data) {
+        return this.requestProvider.post('/user', data);
+    }
+
+    getProfile() {
+        return this.requestProvider.get('/profile');
     }
 }

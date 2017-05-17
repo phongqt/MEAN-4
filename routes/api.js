@@ -22,7 +22,7 @@ router.post('/authenticate', function (req, resp, next) {
                 resp.json(err);
             } else {
                 let token = jwt.sign(data, 'superSecret', {
-                    expiresIn: 1440
+                    expiresIn: 86400
                 });
 
                 let result = successResp(token);
@@ -33,20 +33,30 @@ router.post('/authenticate', function (req, resp, next) {
 });
 
 /* Api for user*/
-router.post('/sigup', function (req, resp, next) {
+router.post('/user', function (req, resp, next) {
     var model = req.body;
     var user = new User({
         UserName: model.UserName,
         Password: model.Password,
+        FistName: model.FistName,
+        LastName: model.LastName,
+        Address: model.Address,
+        Image: model.Image,
+        Email: model.Email,
         Role: 1
     });
-
+    
     user.save(function (err) {
         if (err) return handleError(err);
         let result = successResp(null);
         resp.json(result);
     });
 });
+
+router.get('/profile', checkAuthentication, function (req, resp, next) {
+    console.log(req.decode._doc);
+    next();
+})
 
 /* Api for employ */
 router.get('/employ', checkAuthentication, function (req, resp, next) {

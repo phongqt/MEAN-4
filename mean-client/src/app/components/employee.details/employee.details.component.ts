@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({  
     moduleId: module.id,  
     selector: 'employee-details',  
-    templateUrl: 'details.component.html',  
+    templateUrl: 'employee.details.component.html',  
       
 })  
 export class DetailsEmployeeComponent {  

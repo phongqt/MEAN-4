@@ -6,7 +6,7 @@ import { Employee } from '../../models/employee';
 @Component({
     moduleId: module.id,
     selector: 'edit',
-    templateUrl: 'edit.component.html',
+    templateUrl: 'employee.edit.component.html',
 
 })
 export class EditEmployeeComponent implements OnInit {
@@ -34,7 +34,7 @@ export class EditEmployeeComponent implements OnInit {
                 .then(res => {
                     if (res.success) {
                         alert('Success.');
-                        this.router.navigate(['/home']);
+                        this.router.navigate(['/dashboard']);
                         //this.router.navigate(['/details'], { queryParams: { id: this.pars['id'] } });
                         //this.router.navigate(['edit', { id: this.pars['id'] }]);
                     } else {

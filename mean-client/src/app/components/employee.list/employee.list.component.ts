@@ -1,12 +1,12 @@
 import { EmployeeService } from "../../services/employee.service";
 import { Component, OnInit } from '@angular/core';
 import { Response } from '@angular/http';
-import { DetailsEmployeeComponent } from '../employee.details/details.component';
+import { DetailsEmployeeComponent } from '../employee.details/employee.details.component';
 
 @Component({
     moduleId: module.id,
     selector: 'home',
-    templateUrl: 'list.component.html',
+    templateUrl: 'employee.list.component.html',
 
 })
 export class ListEmployeeComponent implements OnInit {

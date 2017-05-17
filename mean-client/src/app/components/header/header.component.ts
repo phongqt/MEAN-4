@@ -1,4 +1,6 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import {CookieProvider} from '../../providers/cookie.provider';
 
 @Component({
     selector: 'header-menu',
@@ -6,5 +8,15 @@ import {Component} from '@angular/core';
 })
 
 export class HeaderComponent {
+    constructor(private router: Router, private cookieProvider: CookieProvider) {
+    }
 
+    viewProfile() {
+        this.router.navigate(['/dashboard/profile']);
+    }
+
+    logout() {
+        this.cookieProvider.remove("token");
+        this.router.navigate(['/login']);
+    }
 }
