@@ -19,8 +19,9 @@ import { NewUserComponent } from '../user.new/user.new.component';
 import { ListUserComponent } from '../user.list/user.list.component';
 import { EditUserComponent } from '../user.edit/user.edit.component';
 
-import { EmployeeService } from "../../services/employee.service";
-import { UserService } from "../../services/user.service";
+import { EmployeeService } from '../../services/employee.service';
+import { UserService } from '../../services/user.service';
+import { FileUploadService } from '../../services/fileupload.service';
 
 import { RequestProvider } from '../../providers/request.provider';
 import { CookieProvider } from '../../providers/cookie.provider';
@@ -93,7 +94,7 @@ import { AuthGuard } from '../../providers/authGuard.provider';
     ]),
     HttpModule
   ],
-  providers: [EmployeeService, RequestProvider, UserService, CookieProvider, LocalStorageProvider, AuthGuard],
+  providers: [EmployeeService, RequestProvider, UserService, CookieProvider, LocalStorageProvider, AuthGuard, FileUploadService],
 
   bootstrap: [AppComponent]
 })

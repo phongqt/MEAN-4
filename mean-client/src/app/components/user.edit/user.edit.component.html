@@ -25,6 +25,10 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
+                        <label for="exampleInputFile">Avatar</label>
+                        <input type="file" id="exampleInputFile" [formControl]="editForm.controls['Avatar']" (change)="onChangeAvatar($event)">
+                    </div>
+                    <div class="form-group">
                         <label>Email </label>
                         <input class="form-control" type="text" placeholder="Email" [formControl]="editForm.controls['Email']" disabled>
                     </div>

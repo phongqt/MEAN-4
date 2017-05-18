@@ -3,7 +3,7 @@ export class User {
     Password: String;
     FirstName: String;
     LastName: String;
-    Image: String;
+    Avatar: String;
     Address: String;
     Email: String;
 };

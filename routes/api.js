@@ -9,6 +9,9 @@ var Employee = require('../config/employee');
 var User = require('../config/user');
 var config = require('../constants/config');
 
+var multer  = require('multer');
+var upload = multer({ dest: 'uploads/' });
+
 router.post('/authenticate', function (req, resp, next) {
     var model = req.body;
     User.findOne({ UserName: model.UserName }, function (err, data) {
@@ -57,7 +60,7 @@ router.post('/user', checkAuthentication, function (req, resp, next) {
         FirstName: model.FirstName,
         LastName: model.LastName,
         Address: model.Address,
-        Image: model.Image,
+        Avatar: model.Avatar,
         Email: model.Email,
         Role: 1
     });
@@ -190,6 +193,10 @@ router.delete('/employ/:id', checkAuthentication, function (req, resp, next) {
 });
 
 /* File handle */ 
+router.post('/file-upload/profile', upload.single('avatar'), function(req, resp, next) {
+    console.log(req);
+    next();
+});
 
 function getEmployeeById(id, callback) {
     Employee.findById(id, function (err, employee) {

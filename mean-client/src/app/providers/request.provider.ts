@@ -45,6 +45,17 @@ export class RequestProvider {
             .catch(this.handleError);
     }
 
+    uploadFile(url: String, data) {
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json', 'Authorization': this.cookieProvider.get("token")
+        });
+
+        return this.http.post(this.api + url, data, {headers: headers}).toPromise()
+            .then(response => response.json())
+            .catch(this.handleError);
+    }
+
     private handleError(error: any): Promise<any> {
         console.log('An error occurred', error);
         return Promise.reject(error.message || error);

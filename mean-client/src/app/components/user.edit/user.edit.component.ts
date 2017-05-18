@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { User } from '../../models/user';
 import { UserService } from "../../services/user.service";
+import { FileUploadService } from "../../services/fileupload.service";
 
 @Component({
     selector: 'edit-user',
@@ -14,8 +15,10 @@ export class EditUserComponent implements OnInit {
     private user: User;
     private editForm: FormGroup;
     private pars: Params;
+    private file: File;
 
-    constructor(private userService: UserService, private route: ActivatedRoute, private router: Router, private fb: FormBuilder) {        
+    constructor(private userService: UserService, private route: ActivatedRoute, private fileUploadService: FileUploadService,
+        private router: Router, private fb: FormBuilder) {
         let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         this.editForm = fb.group({
             UserName: '',
@@ -23,6 +26,7 @@ export class EditUserComponent implements OnInit {
             LastName: [null, Validators.required],
             Email: [null, Validators.compose([Validators.required, Validators.pattern(emailRegex)])],
             Address: '',
+            Avatar: null
         });
 
         this.route.params
@@ -44,10 +48,15 @@ export class EditUserComponent implements OnInit {
                         FirstName: this.user.FirstName,
                         LastName: this.user.LastName,
                         Email: this.user.Email,
-                        Address: this.user.Address
+                        Address: this.user.Address,
+                        Avatar: null
                     });
                 }
             });
+    }
+
+    onChangeAvatar(event) {
+        this.file = event.srcElement.files;
     }
 
     onSubmit(form): void {
@@ -56,15 +65,19 @@ export class EditUserComponent implements OnInit {
             this.user.FirstName = value.FirstName;
             this.user.LastName = value.LastName;
             this.user.Address = value.Address;
-
-            this.userService.updateUser(this.pars['id'], this.user).then(res => {
-                if (res.success) {
-                    alert('Success.');
-                    this.router.navigate(['/dashboard/user-list']);
-                } else {
-                    alert(res.message);
-                }
+            var data = new FormData();
+            data.append('file', this.file);
+            this.fileUploadService.uploadAvatar(data).then(res => {
+                console.log(res);
             });
+            // this.userService.updateUser(this.pars['id'], this.user).then(res => {
+            //     if (res.success) {
+            //         alert('Success.');
+            //         this.router.navigate(['/dashboard/user-list']);
+            //     } else {
+            //         alert(res.message);
+            //     }
+            // });
         } else {
             alert('Data invalid.');
         }

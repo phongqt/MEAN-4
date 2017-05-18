@@ -41,3 +41,23 @@ app.use('*', index);
 app.listen(port, function () {
     console.log('Server Started At ' + port);
 })  
+
+var onError = function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      throw new Error();
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      throw new Error();
+    default:
+      throw error;
+  }
+};
+
+app.on('error', onError);
