@@ -1,7 +1,7 @@
 export class User {
     UserName: String;
     Password: String;
-    FistName: String;
+    FirstName: String;
     LastName: String;
     Image: String;
     Address: String;

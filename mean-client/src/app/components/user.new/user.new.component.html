@@ -1,64 +1,75 @@
 <div class="box box-default">
     <div class="box-body">
-        <form  [formGroup]="createForm" (ngSubmit)="onSubmit(createForm)">
+        <form [formGroup]="createForm" (ngSubmit)="onSubmit(createForm)">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>User Name </label>
-                        <input class="form-control" type="text" placeholder="John" [formControl]="createForm.controls['UserName']">
-                        <!--<input type="text" class="form-control" [(ngModel)]="user.UserName" placeholder="User name" name="UserName" #username="ngModel"
-                            required>-->
-                        <!--<div [hidden]="username.valid || username.pristine" class="alert alert-danger">
+                        <input class="form-control" type="text" placeholder="User name" [formControl]="createForm.controls['UserName']">
+                        <div *ngIf="createForm.controls['UserName'].hasError('required') && !createForm.controls['UserName'].pristine" class="alert alert-danger">
                             User name is required
-                        </div>-->
-                        <div *ngIf="createForm.controls['UserName'].hasError('required') && createForm.controls['UserName'].touched" class="alert alert-danger">
-                            You must include a first name.
+                        </div>
+                        <div *ngIf="createForm.controls['UserName'].hasError('minlength') && !createForm.controls['UserName'].pristine" class="alert alert-danger">
+                            Your user name must be at least 5 characters long.
+                        </div>
+                        <div *ngIf="createForm.controls['UserName'].hasError('maxlength') && !createForm.controls['UserName'].pristine" class="alert alert-danger">
+                            Your last name cannot exceed 15 characters.
                         </div>
                     </div>
-                    <!--<div class="form-group">
+                    <div class="form-group">
                         <label>First Name </label>
-                        <input type="text" class="form-control" [(ngModel)]="user.FirstName" placeholder="First name" name="FirstName" #firstname="ngModel"
-                            required>
-                        <div [hidden]="firstname.valid || firstname.pristine" class="alert alert-danger">
+                        <input class="form-control" type="text" placeholder="First name" [formControl]="createForm.controls['FirstName']">
+                        <div *ngIf="createForm.controls['FirstName'].hasError('required') && !createForm.controls['FirstName'].pristine" class="alert alert-danger">
                             First name is required
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Last Name </label>
-                        <input type="text" class="form-control" [(ngModel)]="user.LastName" placeholder="Last name" name="LastName" #lastname="ngModel"
-                            required>
-                        <div [hidden]="lastname.valid || lastname.pristine" class="alert alert-danger">
-                            Last is required
+                        <input class="form-control" type="text" placeholder="Last name" [formControl]="createForm.controls['LastName']">
+                        <div *ngIf="createForm.controls['LastName'].hasError('required') && !createForm.controls['LastName'].pristine" class="alert alert-danger">
+                            Last name is required
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Email </label>
-                        <input type="email" class="form-control" [(ngModel)]="user.Email" placeholder="Email" name="Email" #email="ngModel" required>
-                        <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
+                        <input class="form-control" type="text" placeholder="Email" [formControl]="createForm.controls['Email']">
+                        <div *ngIf="createForm.controls['Email'].hasError('required') && !createForm.controls['Email'].pristine" class="alert alert-danger">
                             Email is required
                         </div>
-                        <div [hidden]="!email.error || email.valid || email.pristine">
-                            Email invaid
+                        <div *ngIf="createForm.controls['Email'].hasError('pattern') && !createForm.controls['Email'].pristine" class="alert alert-danger">
+                            Email invalid
                         </div>
-                    </div>-->
+
+                    </div>
                 </div>
-                <!--<div class="col-md-6">
+                <div class="col-md-6">
                     <div class="form-group">
-                        <label>Password: </label>
-                        <input type="password" class="form-control" [(ngModel)]="user.Password" placeholder="Password" name="Password" #password="ngModel"
-                            required>
-                        <div [hidden]="password.valid || password.pristine" class="alert alert-danger">
+                        <label>Password </label>
+                        <input class="form-control" type="password" placeholder="Password" [formControl]="createForm.controls['Passwords'].controls['Password']">
+                        <div *ngIf="createForm.controls['Passwords'].controls['Password'].hasError('required') && !createForm.controls['Passwords'].controls['Password'].pristine"
+                            class="alert alert-danger">
                             Password is required
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password confirm</label>
+                        <input class="form-control" type="password" placeholder="Password confirm" [formControl]="createForm.controls['Passwords'].controls['PasswordConfirm']">
+                        <div *ngIf="createForm.controls['Passwords'].controls['PasswordConfirm'].hasError('required') && !createForm.controls['Passwords'].controls['PasswordConfirm'].pristine"
+                            class="alert alert-danger">
+                            Password confirm is required
+                        </div>
+                        <div *ngIf="createForm.controls['Passwords'].controls['PasswordConfirm'].hasError('notEquivalent') && !createForm.controls['Passwords'].controls['PasswordConfirm'].pristine" class="alert alert-danger">
+                            The two passwords aren't the same
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Address </label>
-                        <textarea rows="3" class="form-control" [(ngModel)]="user.Address" placeholder="Address" name="Address"></textarea>
+                        <textarea rows="3" class="form-control" placeholder="Address" name="Address" [formControl]="createForm.controls['Address']"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-success" [disabled]="!createForm.form.valid">Submit</button>
+                    <button type="submit" class="btn btn-success" [disabled]="!createForm.valid">Submit</button>
 
-                </div>-->
+                </div>
             </div>
         </form>
     </div>

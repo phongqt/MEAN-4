@@ -16,6 +16,8 @@ import { ListEmployeeComponent } from '../employee.list/employee.list.component'
 import { HeaderComponent } from '../header/header.component';
 import { ProfileComponent } from '../profile/profile.component';
 import { NewUserComponent } from '../user.new/user.new.component';
+import { ListUserComponent } from '../user.list/user.list.component';
+import { EditUserComponent } from '../user.edit/user.edit.component';
 
 import { EmployeeService } from "../../services/employee.service";
 import { UserService } from "../../services/user.service";
@@ -37,7 +39,9 @@ import { AuthGuard } from '../../providers/authGuard.provider';
     ListEmployeeComponent,
     HeaderComponent,
     ProfileComponent,
-    NewUserComponent
+    NewUserComponent,
+    ListUserComponent,
+    EditUserComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -52,31 +56,39 @@ import { AuthGuard } from '../../providers/authGuard.provider';
           { path: '', redirectTo: 'list', pathMatch: 'full' },
           {
             path: 'details/:id',
-            component: DetailsEmployeeComponent, canActivate: [AuthGuard]
+            component: DetailsEmployeeComponent
           },
           {
             path: 'add',
-            component: NewEmployeeComponent, canActivate: [AuthGuard]
+            component: NewEmployeeComponent
           },
           {
             path: 'edit/:id',
-            component: EditEmployeeComponent, canActivate: [AuthGuard]
+            component: EditEmployeeComponent
           },
           {
             path: 'list',
-            component: ListEmployeeComponent, canActivate: [AuthGuard]
+            component: ListEmployeeComponent
           },
           {
             path: 'profile',
-            component: ProfileComponent, canActivate: [AuthGuard]
+            component: ProfileComponent
+          },
+          {
+            path: 'user-list',
+            component: ListUserComponent
           },
           {
             path: 'user-add',
-            component: NewUserComponent, canActivate: [AuthGuard]
+            component: NewUserComponent
+          },
+          {
+            path: 'user-edit/:id',
+            component: EditUserComponent
           }
         ]
       },
-      { path: 'login', component: LoginComponent },      
+      { path: 'login', component: LoginComponent },
       { path: '**', redirectTo: 'dashboard' }
     ]),
     HttpModule

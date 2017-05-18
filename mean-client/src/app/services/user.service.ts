@@ -16,7 +16,23 @@ export class UserService {
         return this.requestProvider.post('/user', data);
     }
 
+    updateUser(id, data) {
+        return this.requestProvider.put('/user/' + id, data);
+    }
+
     getProfile() {
         return this.requestProvider.get('/profile');
+    }
+
+    getUserList(page, limit) {
+        return this.requestProvider.get('/user?page=' + page + '&limit=' + limit);
+    }
+
+    getUserInfo(id) {
+        return this.requestProvider.get('/user/' + id);
+    }
+
+    deleteUser(id) {
+        return this.requestProvider.delete('/user/' + id);
     }
 }

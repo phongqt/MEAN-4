@@ -1,0 +1,42 @@
+<div class="box box-default">
+    <div class="box-body">
+        <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm)">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>User Name </label>
+                        <input class="form-control" type="text" placeholder="User name" [formControl]="editForm.controls['UserName']" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>First Name </label>
+                        <input class="form-control" type="text" placeholder="First name" [formControl]="editForm.controls['FirstName']">
+                        <div *ngIf="editForm.controls['FirstName'].hasError('required') && !editForm.controls['FirstName'].pristine" class="alert alert-danger">
+                            First name is required
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name </label>
+                        <input class="form-control" type="text" placeholder="Last name" [formControl]="editForm.controls['LastName']">
+                        <div *ngIf="editForm.controls['LastName'].hasError('required') && !editForm.controls['LastName'].pristine" class="alert alert-danger">
+                            Last name is required
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Email </label>
+                        <input class="form-control" type="text" placeholder="Email" [formControl]="editForm.controls['Email']" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address </label>
+                        <textarea rows="3" class="form-control" placeholder="Address" name="Address" [formControl]="editForm.controls['Address']"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success" [disabled]="!editForm.valid">Submit</button>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

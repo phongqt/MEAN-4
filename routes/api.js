@@ -33,30 +33,85 @@ router.post('/authenticate', function (req, resp, next) {
 });
 
 /* Api for user*/
-router.post('/user', function (req, resp, next) {
-    var model = req.body;
-    var user = new User({
+router.get('/user', checkAuthentication, function (req, resp, next) {
+    let page = req.query.page || 1;
+    let limit = req.query.limit || constSys.limit;
+    let skip = (page - 1) * limit;
+    User.find().sort('UserName').skip(parseInt(skip)).limit(parseInt(limit)).exec(function (err, users) {
+        if (err) return handleError(resp, err);
+        User.count().exec(function (err, count) {
+            let data = reslt.dataPaging;
+            data.data = users;
+            data.totalItems = count;
+            let res = successResp(data);
+            return resp.send(res);
+        });
+    })
+});
+
+router.post('/user', checkAuthentication, function (req, resp, next) {
+    let model = req.body;
+    let user = new User({
         UserName: model.UserName,
         Password: model.Password,
-        FistName: model.FistName,
+        FirstName: model.FirstName,
         LastName: model.LastName,
         Address: model.Address,
         Image: model.Image,
         Email: model.Email,
         Role: 1
     });
-    
-    user.save(function (err) {
-        if (err) return handleError(err);
-        let result = successResp(null);
-        resp.json(result);
+    User.findOne({ $or: [{ 'UserName': user.UserName }, { 'Email': user.Email }] }, function (err, data) {
+        if (err) return handleError(resp, err);
+        if (data) {
+            return handleError(resp, "User name or Email existed.");
+        }
+        user.save(function (err) {
+            if (err) return handleError(resp, err);
+            let result = successResp(null);
+            return resp.json(result);
+        });
+    });
+});
+
+router.get('/user/:id', checkAuthentication, function (req, resp, next) {
+    User.findById(req.params['id'], function (err, data) {
+        if (err) return handleError(resp, err);
+        let result = successResp(data);
+        return resp.json(result);
+    });
+});
+
+router.delete('/user/:id', checkAuthentication, function (req, resp, next) {
+    User.findById(req.params.id, function (err, user) {
+        if (err) return handleError(resp, err);
+        User.remove(user, function (err, data) {
+            if (err) return handleError(resp, err);
+            let res = successResp(null);
+            return resp.send(res);
+        });
+    });
+});
+
+router.put('/user/:id', checkAuthentication, function (req, resp, next) {
+    User.findById(req.params.id, function (err, user) {
+        if (err) return handleError(resp, err);
+        let model = req.body;
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
+        user.Address = model.Address;
+        user.save(function (err, userUpdate) {
+            if (err) return handleError(resp, err);
+            let res = successResp(userUpdate);
+            return resp.send(res);
+        });
     });
 });
 
 router.get('/profile', checkAuthentication, function (req, resp, next) {
     console.log(req.decode._doc);
     next();
-})
+});
 
 /* Api for employ */
 router.get('/employ', checkAuthentication, function (req, resp, next) {
@@ -64,63 +119,61 @@ router.get('/employ', checkAuthentication, function (req, resp, next) {
     let limit = req.query.limit || constSys.limit;
     let skip = (page - 1) * limit;
     Employee.find().sort('EmployeeName').skip(parseInt(skip)).limit(parseInt(limit)).exec(function (err, employees) {
-        if (err) return handleError(err);
+        if (err) return handleError(resp, err);
         Employee.count().exec(function (err, count) {
-            var data = reslt.dataPaging;
+            let data = reslt.dataPaging;
             data.data = employees;
             data.totalItems = count;
-            var res = successResp(data);
-            resp.send(res);
+            let res = successResp(data);
+            return resp.send(res);
         });
     })
 });
 
 router.get('/employ/:id', checkAuthentication, function (req, resp, next) {
     getEmployeeById(req.params.id, function (employee) {
-        var res = successResp(employee);
-        resp.send(res);
+        let res = successResp(employee);
+        return resp.send(res);
     });
 });
 
 router.put('/employ/:id', checkAuthentication, function (req, resp, next) {
     getEmployeeById(req.params.id, function (employee) {
-        var model = req.body;
+        let model = req.body;
         employee.EmployeeName = model.EmployeeName;
         employee.Designation = model.Designation;
         employee.Skills = model.Skills;
         Employee.findOne({ EmployeeName: employee.EmployeeName }, function (err, obj) {
             if (!obj || obj._id == req.params.id) {
                 employee.save(function (err, updateEmployee) {
-                    if (err) return handleError(err);
-                    var res = successResp(updateEmployee);
-                    resp.send(res);
+                    if (err) return handleError(resp, err);
+                    let res = successResp(updateEmployee);
+                    return resp.send(res);
                 });
             } else {
-                var res = errorResp("Employee existed!");
-                resp.send(res);
+                return handleError(resp, "Employee existed!");
             }
         });
     });
 });
 
 router.post('/employ', checkAuthentication, function (req, resp, next) {
-    var data = req.body;
+    let data = req.body;
     Employee.findOne({ EmployeeName: data.EmployeeName }, function (err, obj) {
         if (!obj) {
-            var employModel = new Employee({
+            let employModel = new Employee({
                 EmployeeName: data.EmployeeName,
                 Skills: data.Skills,
                 Designation: data.Designation,
                 Project: data.Project
             });
             Employee.insertMany(employModel, function (err, data) {
-                if (err) return handleError(err);
-                var res = successResp(data);
-                resp.send(res);
+                if (err) return handleError(resp, err);
+                let res = successResp(data);
+                return resp.send(res);
             })
         } else {
-            var res = errorResp("Employee existed!");
-            resp.send(res);
+            return handleError(resp, "Employee existed!");
         }
     });
 
@@ -129,12 +182,14 @@ router.post('/employ', checkAuthentication, function (req, resp, next) {
 router.delete('/employ/:id', checkAuthentication, function (req, resp, next) {
     getEmployeeById(req.params.id, function (employee) {
         Employee.remove(employee, function (err, data) {
-            if (err) return handleError(err);
-            var res = successResp(null);
-            resp.send(res);
+            if (err) return handleError(resp, err);
+            let res = successResp(null);
+            return resp.send(res);
         });
     });
 });
+
+/* File handle */ 
 
 function getEmployeeById(id, callback) {
     Employee.findById(id, function (err, employee) {
@@ -145,12 +200,13 @@ function getEmployeeById(id, callback) {
     });
 }
 
-function handleError(error) {
-
+function handleError(resp, error) {
+    let resul = errorResp(error);
+    return resp.json(resul);
 }
 
 function successResp(data) {
-    var result = reslt.result;
+    let result = reslt.result;
     result.success = true;
     result.message = "success!";
     result.data = data;
@@ -158,7 +214,7 @@ function successResp(data) {
 }
 
 function errorResp(message) {
-    var result = reslt.result;
+    let result = reslt.result;
     result.success = false;
     result.message = message;
     result.data = null;
@@ -168,7 +224,7 @@ function errorResp(message) {
 /* For authentication */
 function checkAuthentication(request, response, next) {
     let path = request.path;
-    var token = request.headers['authorization'];
+    let token = request.headers['authorization'];
     if (token) {
         jwt.verify(token, "superSecret", function (err, decode) {
             if (err) {
