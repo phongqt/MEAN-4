@@ -9,8 +9,8 @@ var Employee = require('../config/employee');
 var User = require('../config/user');
 var config = require('../constants/config');
 
-var multer  = require('multer');
-var upload = multer({ dest: 'uploads/' });
+var multer = require('multer');
+// var upload = multer({ dest: 'uploads/' });
 
 router.post('/authenticate', function (req, resp, next) {
     var model = req.body;
@@ -52,7 +52,7 @@ router.get('/user', checkAuthentication, function (req, resp, next) {
     })
 });
 
-router.post('/user', checkAuthentication, function (req, resp, next) {
+router.post('/user', function (req, resp, next) {
     let model = req.body;
     let user = new User({
         UserName: model.UserName,
@@ -103,6 +103,10 @@ router.put('/user/:id', checkAuthentication, function (req, resp, next) {
         user.FirstName = model.FirstName;
         user.LastName = model.LastName;
         user.Address = model.Address;
+        if (model.Avatar) {
+            user.Avatar = model.Avatar;
+        }
+
         user.save(function (err, userUpdate) {
             if (err) return handleError(resp, err);
             let res = successResp(userUpdate);
@@ -192,15 +196,36 @@ router.delete('/employ/:id', checkAuthentication, function (req, resp, next) {
     });
 });
 
-/* File handle */ 
-router.post('/file-upload/profile', upload.single('avatar'), function(req, resp, next) {
-    console.log(req);
-    next();
+/* File handle */
+var storage = multer.diskStorage({ //multers disk storage settings
+    destination: function (req, file, cb) {
+        cb(null, './uploads/');
+    },
+    filename: function (req, file, cb) {
+        var datetimestamp = Date.now();
+        cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1]);
+    }
+});
+
+var upload = multer({ //multer settings
+    storage: storage
+}).single('file');
+
+router.post('/avatar', checkAuthentication, function (req, res) {
+    upload(req, res, function (err) {
+        if (err) {
+            return handleError(res, err);
+        }
+
+        console.log(req.file);
+        let result = successResp(req.file.filename);
+        return res.json(result);
+    });
 });
 
 function getEmployeeById(id, callback) {
     Employee.findById(id, function (err, employee) {
-        if (err) return handleError(err);
+        if (err) return err;
         if (typeof callback === "function") {
             return callback(employee);
         }

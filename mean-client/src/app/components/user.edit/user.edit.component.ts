@@ -61,23 +61,27 @@ export class EditUserComponent implements OnInit {
 
     onSubmit(form): void {
         if (form.valid) {
-            var value = form.value;
-            this.user.FirstName = value.FirstName;
-            this.user.LastName = value.LastName;
-            this.user.Address = value.Address;
-            var data = new FormData();
-            data.append('file', this.file);
-            this.fileUploadService.uploadAvatar(data).then(res => {
-                console.log(res);
+            let file: File = this.file[0];
+            let formData: FormData = new FormData();
+            formData.append('file', file, file.name);
+            this.fileUploadService.uploadAvatar(formData).then(res => {
+                if (res.success) {
+                    let value = form.value;
+                    this.user.FirstName = value.FirstName;
+                    this.user.LastName = value.LastName;
+                    this.user.Address = value.Address;
+                    this.user.Avatar = res.data;
+                    this.userService.updateUser(this.pars['id'], this.user).then(res => {
+                        if (res.success) {
+                            alert('Success.');
+                            this.router.navigate(['/dashboard/user-list']);
+                        } else {
+                            alert(res.message);
+                        }
+                    });
+                }
             });
-            // this.userService.updateUser(this.pars['id'], this.user).then(res => {
-            //     if (res.success) {
-            //         alert('Success.');
-            //         this.router.navigate(['/dashboard/user-list']);
-            //     } else {
-            //         alert(res.message);
-            //     }
-            // });
+
         } else {
             alert('Data invalid.');
         }

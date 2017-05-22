@@ -55,6 +55,7 @@ export class NewUserComponent implements OnInit {
             this.user.Password = value.Passwords.Password;
             this.user.Email = value.Email;
             this.user.Address = value.Address;
+            this.user.Avatar = '';
             
             this.userService.addUser(this.user).then(res => {
                 if (res.success) {
