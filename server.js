@@ -5,42 +5,34 @@ var connect = require('./config/connect');
 var morgan = require('morgan');
 var jwt = require('jsonwebtoken');
 
+
 var index = require('./routes/index');
 var api = require('./routes/api');
+var upload = require('./routes/upload');
 
 var port = 4500;
 var app = express();
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '/mean-client'));
-
-
-app.engine('html', require('ejs').renderFile);
-
-app.use(express.static(path.join(__dirname, '/mean-client')));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(morgan('dev'));
 
-app.use(function (request, response, next) {     
-    response.setHeader('Access-Control-Allow-Origin', '*');
-    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    response.setHeader('Access-Control-Allow-Headers', 'X-Requested-By,content-type, Authorization');
-    response.setHeader('Access-Control-Allow-Credentials', true);
-    next();
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-By,content-type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
 });
 
-app.use('/', index);
 app.use('/api', api);
-app.use('*', index);
 
-// define the middleware for routing  
+app.use('/uploads', upload);
 
 app.listen(port, function () {
-    console.log('Server Started At ' + port);
-})  
+  console.log('Server Started At ' + port);
+})
 
 var onError = function onError(error) {
   if (error.syscall !== 'listen') {

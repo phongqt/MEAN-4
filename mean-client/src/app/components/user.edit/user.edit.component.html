@@ -23,7 +23,9 @@
                     </div>
                     <div class="form-group">
                         <label for="exampleInputFile">Avatar</label>
-                        <input type="file" id="exampleInputFile" [formControl]="editForm.controls['Avatar']" (change)="onChangeAvatar($event)">
+                        <input type="file" id="exampleInputFile" (change)="onChangeAvatar($event)">
+                        <br /> 
+                        <img *ngIf="user.Avatar" class="img-responsive" [src]='sanitizer.bypassSecurityTrustUrl(user.Avatar)' alt="Avatar">
                     </div>
                 </div>
                 <div class="col-md-6">

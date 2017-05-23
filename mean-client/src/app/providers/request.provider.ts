@@ -47,10 +47,6 @@ export class RequestProvider {
 
     uploadFile(url: String, data) {
         let headers = new Headers({ 'Authorization': this.cookieProvider.get("token") });
-        // headers.append('Content-Type', 'application/x-www-form-urlencoded');
-        // headers.append('Accept', 'application/json');
-        // let options = new RequestOptions({ headers: headers });
-
         return this.http.post(this.api + url, data, { headers: headers }).toPromise()
             .then(response => response.json())
             .catch(this.handleError);

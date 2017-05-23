@@ -8,14 +8,16 @@ var router = express.Router();
 var Employee = require('../config/employee');
 var User = require('../config/user');
 var config = require('../constants/config');
+var util = require('../constants/utils');
+var authenticate = require('../helpers/authenticate.js');
 
 var multer = require('multer');
-// var upload = multer({ dest: 'uploads/' });
 
 router.post('/authenticate', function (req, resp, next) {
     var model = req.body;
     User.findOne({ UserName: model.UserName }, function (err, data) {
         if (err) throw err;
+        console.log(data);
         if (!data) {
             let err = errorResp("Authentication failed. User not found.");
             resp.json(err);
@@ -36,7 +38,7 @@ router.post('/authenticate', function (req, resp, next) {
 });
 
 /* Api for user*/
-router.get('/user', checkAuthentication, function (req, resp, next) {
+router.get('/user', authenticate.checkAuthentication, function (req, resp, next) {
     let page = req.query.page || 1;
     let limit = req.query.limit || constSys.limit;
     let skip = (page - 1) * limit;
@@ -52,7 +54,7 @@ router.get('/user', checkAuthentication, function (req, resp, next) {
     })
 });
 
-router.post('/user', function (req, resp, next) {
+router.post('/user', authenticate.checkAuthentication, function (req, resp, next) {
     let model = req.body;
     let user = new User({
         UserName: model.UserName,
@@ -60,10 +62,11 @@ router.post('/user', function (req, resp, next) {
         FirstName: model.FirstName,
         LastName: model.LastName,
         Address: model.Address,
-        Avatar: model.Avatar,
+        Image: model.Avatar,
         Email: model.Email,
         Role: 1
     });
+
     User.findOne({ $or: [{ 'UserName': user.UserName }, { 'Email': user.Email }] }, function (err, data) {
         if (err) return handleError(resp, err);
         if (data) {
@@ -77,7 +80,7 @@ router.post('/user', function (req, resp, next) {
     });
 });
 
-router.get('/user/:id', checkAuthentication, function (req, resp, next) {
+router.get('/user/:id', authenticate.checkAuthentication, function (req, resp, next) {
     User.findById(req.params['id'], function (err, data) {
         if (err) return handleError(resp, err);
         let result = successResp(data);
@@ -85,7 +88,7 @@ router.get('/user/:id', checkAuthentication, function (req, resp, next) {
     });
 });
 
-router.delete('/user/:id', checkAuthentication, function (req, resp, next) {
+router.delete('/user/:id', authenticate.checkAuthentication, function (req, resp, next) {
     User.findById(req.params.id, function (err, user) {
         if (err) return handleError(resp, err);
         User.remove(user, function (err, data) {
@@ -96,15 +99,16 @@ router.delete('/user/:id', checkAuthentication, function (req, resp, next) {
     });
 });
 
-router.put('/user/:id', checkAuthentication, function (req, resp, next) {
+router.put('/user/:id', authenticate.checkAuthentication, function (req, resp, next) {
     User.findById(req.params.id, function (err, user) {
         if (err) return handleError(resp, err);
         let model = req.body;
+        console.log(model);
         user.FirstName = model.FirstName;
         user.LastName = model.LastName;
         user.Address = model.Address;
         if (model.Avatar) {
-            user.Avatar = model.Avatar;
+            user.Image = model.Avatar;
         }
 
         user.save(function (err, userUpdate) {
@@ -115,13 +119,13 @@ router.put('/user/:id', checkAuthentication, function (req, resp, next) {
     });
 });
 
-router.get('/profile', checkAuthentication, function (req, resp, next) {
+router.get('/profile', authenticate.checkAuthentication, function (req, resp, next) {
     console.log(req.decode._doc);
     next();
 });
 
 /* Api for employ */
-router.get('/employ', checkAuthentication, function (req, resp, next) {
+router.get('/employ', authenticate.checkAuthentication, function (req, resp, next) {
     let page = req.query.page || 1;
     let limit = req.query.limit || constSys.limit;
     let skip = (page - 1) * limit;
@@ -137,14 +141,14 @@ router.get('/employ', checkAuthentication, function (req, resp, next) {
     })
 });
 
-router.get('/employ/:id', checkAuthentication, function (req, resp, next) {
+router.get('/employ/:id', authenticate.checkAuthentication, function (req, resp, next) {
     getEmployeeById(req.params.id, function (employee) {
         let res = successResp(employee);
         return resp.send(res);
     });
 });
 
-router.put('/employ/:id', checkAuthentication, function (req, resp, next) {
+router.put('/employ/:id', authenticate.checkAuthentication, function (req, resp, next) {
     getEmployeeById(req.params.id, function (employee) {
         let model = req.body;
         employee.EmployeeName = model.EmployeeName;
@@ -164,7 +168,7 @@ router.put('/employ/:id', checkAuthentication, function (req, resp, next) {
     });
 });
 
-router.post('/employ', checkAuthentication, function (req, resp, next) {
+router.post('/employ', authenticate.checkAuthentication, function (req, resp, next) {
     let data = req.body;
     Employee.findOne({ EmployeeName: data.EmployeeName }, function (err, obj) {
         if (!obj) {
@@ -186,7 +190,7 @@ router.post('/employ', checkAuthentication, function (req, resp, next) {
 
 });
 
-router.delete('/employ/:id', checkAuthentication, function (req, resp, next) {
+router.delete('/employ/:id', authenticate.checkAuthentication, function (req, resp, next) {
     getEmployeeById(req.params.id, function (employee) {
         Employee.remove(employee, function (err, data) {
             if (err) return handleError(resp, err);
@@ -208,10 +212,11 @@ var storage = multer.diskStorage({ //multers disk storage settings
 });
 
 var upload = multer({ //multer settings
-    storage: storage
+    storage: storage,
+    fileFilter: util.imageFilter 
 }).single('file');
 
-router.post('/avatar', checkAuthentication, function (req, res) {
+router.post('/avatar', authenticate.checkAuthentication, function (req, res) {
     upload(req, res, function (err) {
         if (err) {
             return handleError(res, err);
@@ -251,28 +256,6 @@ function errorResp(message) {
     result.message = message;
     result.data = null;
     return result;
-}
-
-/* For authentication */
-function checkAuthentication(request, response, next) {
-    let path = request.path;
-    let token = request.headers['authorization'];
-    if (token) {
-        jwt.verify(token, "superSecret", function (err, decode) {
-            if (err) {
-                return response.status(401).send({ success: false, message: 'Failed to authenticate token.' });
-            }
-
-            request.decode = decode;
-            return next();
-        });
-    } else {
-        return response.status(403).send({
-            success: false,
-            message: 'No token provided.',
-            data: null
-        })
-    }
 }
 
 module.exports = router;   
