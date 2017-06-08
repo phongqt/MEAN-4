@@ -15,6 +15,7 @@ var multer = require('multer');
 
 router.post('/authenticate', function (req, resp, next) {
     var model = req.body;
+    console.log(model);
     User.findOne({ UserName: model.UserName }, function (err, data) {
         if (err) throw err;
         console.log(data);
@@ -42,7 +43,9 @@ router.get('/user', authenticate.checkAuthentication, function (req, resp, next)
     let page = req.query.page || 1;
     let limit = req.query.limit || constSys.limit;
     let skip = (page - 1) * limit;
-    User.find().sort('UserName').skip(parseInt(skip)).limit(parseInt(limit)).exec(function (err, users) {
+    let orderBy = req.query.orderBy;
+    let isDecs = req.query.isDecs === 'true' ? -1 : 1;
+    User.find({}).select('UserName FirstName LastName Email Address Image').sort({orderBy: isDecs}).skip(parseInt(skip)).limit(parseInt(limit)).exec(function (err, users) {
         if (err) return handleError(resp, err);
         User.count().exec(function (err, count) {
             let data = reslt.dataPaging;
@@ -66,12 +69,13 @@ router.post('/user', authenticate.checkAuthentication, function (req, resp, next
         Email: model.Email,
         Role: 1
     });
-
+    
     User.findOne({ $or: [{ 'UserName': user.UserName }, { 'Email': user.Email }] }, function (err, data) {
         if (err) return handleError(resp, err);
         if (data) {
             return handleError(resp, "User name or Email existed.");
         }
+        console.log(user)
         user.save(function (err) {
             if (err) return handleError(resp, err);
             let result = successResp(null);
