@@ -45,13 +45,14 @@ router.get('/user', authenticate.checkAuthentication, function (req, resp, next)
     let skip = (page - 1) * limit;
     let orderBy = req.query.orderBy;
     let isDecs = req.query.isDecs === 'true' ? -1 : 1;
-    User.find({}).select('UserName FirstName LastName Email Address Image').sort({orderBy: isDecs}).skip(parseInt(skip)).limit(parseInt(limit)).exec(function (err, users) {
+    User.find({}).select('UserName FirstName LastName Email Address Image').sort([[orderBy, isDecs]]).skip(parseInt(skip)).limit(parseInt(limit)).exec(function (err, users) {
         if (err) return handleError(resp, err);
         User.count().exec(function (err, count) {
             let data = reslt.dataPaging;
             data.data = users;
-            data.totalItems = count;
+            data.totalItems = count;           
             let res = successResp(data);
+            console.log(res)
             return resp.send(res);
         });
     })
